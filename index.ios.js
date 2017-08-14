@@ -8,7 +8,6 @@ import React, { Component } from 'react';
 import {
   AppRegistry,
   StyleSheet,
-  Text,
   View,
   PanResponder,
   Animated,
@@ -34,25 +33,20 @@ export default class removeView extends Component {
   }
 
   asyncCall(e, gestureState){
-      //alert('hello')
-    console.log("NAtiVe EvenT"+ JSON.stringify(gestureState))
     if(gestureState.moveX < 162.5 || gestureState.moveY < 607) {
-        //alert("#$1")
         Animated.parallel([
             Animated.spring(
                 this.state.crossScaleAnimation,
                 {
                     toValue: 0.8,
-                    //easing: Easing.back,
-                    //tension:1
+                    easing: Easing.back
                 }
             ),
             Animated.spring(
                 this.state.viewScaleAnimation,
                 {
                     toValue: 1,
-                    //easing: Easing.back,
-                    //friction:1
+                    easing: Easing.back
                 }
             )
         ]).start()
@@ -60,45 +54,34 @@ export default class removeView extends Component {
 
     if(gestureState.moveX >= 162.5 && gestureState.moveY >= 607){
       Animated.parallel([
-        Animated.spring(
+        Animated.timing(
         this.state.crossScaleAnimation,
         {
-          toValue:1.2,
-          //easing: Easing.back,
-          //tension:1
-           restDisplacementThreshold:1
+            toValue:1.2,
+            duration:100
         }
       ),
-      Animated.spring(
+      Animated.timing(
         this.state.viewScaleAnimation,
         {
-          toValue:0.6,
-          //easing: Easing.back,
-          //friction:1,
-         
+            toValue:0.6,
+            duration:100
         }
       )
       ]).start()
     }
-   // }
   }
 
   componentWillMount(){
     this._panResponder = PanResponder.create({
 
-         onStartShouldSetPanResponder: ( e, gestureState) => {
-           return true;
-         },
+         onStartShouldSetPanResponder: ( e, gestureState) => true,
 
-         onMoveShouldSetResponder: (e, gestureState) => {
-           return true;
-         },
+         onMoveShouldSetResponder: (e, gestureState) => true,
 
          onMoveShouldSetResponderCapture: () => true,
 
-         onMoveShouldSetPanResponderCapture: () => {
-           true
-         },
+         onMoveShouldSetPanResponderCapture: () => true,
          
          onPanResponderGrant: (e, gestureState) => {
           //console.log("********" + JSON.stringify(gestureState))
@@ -112,8 +95,7 @@ export default class removeView extends Component {
             if((gestureState.moveX > 162 && gestureState.moveX < 212) && ( gestureState.moveY > 607 && gestureState.moveY < 657)){
                 this.setState({showView:false})
             }
-             console.log("****PanRELeasE" + JSON.stringify(gestureState))
-          this.setState({showCross:false,backOpacity:1}, () => {
+            this.setState({showCross:false,backOpacity:1}, () => {
             this.state.animation.flattenOffset()
           })
           
@@ -129,16 +111,15 @@ export default class removeView extends Component {
   
   render() {
     return (
-      <View style={{flex:1,alignItems:'center',backgroundColor:'indigo',opacity:this.state.backOpacity}}>
+      <View style={[styles.container, {opacity:this.state.backOpacity}]}>
           { this.state.showView ?
         <Animated.View 
-          style={{zIndex:100,height:60,position:'absolute',width:60,borderRadius:30,backgroundColor:'yellowgreen',transform:[{translateX:this.state.animation.x},{translateY:this.state.animation.y},{scaleX:this.state.viewScaleAnimation},{scaleY:this.state.viewScaleAnimation}]}} 
+          style={[styles.circularView, {transform:[{translateX:this.state.animation.x},{translateY:this.state.animation.y},{scaleX:this.state.viewScaleAnimation},{scaleY:this.state.viewScaleAnimation}]}]}
           { ...this._panResponder.panHandlers }
         /> : null}
         { this.state.showCross ?
         <Animated.View 
-          style={{height:50, width:50, borderRadius:25, position:'absolute',marginTop:ScreenHeight-60,transform:[{scaleX:this.state.crossScaleAnimation},{scaleY:this.state.crossScaleAnimation}]}}
-          onLayout={(e)=>console.log("******"+JSON.stringify(e.nativeEvent))}
+          style={[styles.crossView, {transform:[{scaleX:this.state.crossScaleAnimation},{scaleY:this.state.crossScaleAnimation}]}]}
         >
             <EIcon name='circle-with-cross' size={50} style={{color:'white'}}/>
         </Animated.View> : null }
@@ -148,22 +129,28 @@ export default class removeView extends Component {
 }
 
 const styles = StyleSheet.create( {
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
+    container: {
+      flex:1,
+      alignItems:'center',
+      backgroundColor:'indigo'
+    },
+
+    circularView:{
+        zIndex:100,
+        height:60,
+        position:'absolute',
+        width:60,
+        borderRadius:30,
+        backgroundColor:'yellowgreen'
+    },
+
+    crossView:{
+        height:50,
+        width:50,
+        borderRadius:25,
+        position:'absolute',
+        marginTop:ScreenHeight-60
+    }
 });
 
 AppRegistry.registerComponent('removeView', () => removeView);
