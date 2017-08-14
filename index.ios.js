@@ -116,7 +116,7 @@ export default class removeView extends Component {
         <Animated.View 
           style={[styles.circularView, {transform:[{translateX:this.state.animation.x},{translateY:this.state.animation.y},{scaleX:this.state.viewScaleAnimation},{scaleY:this.state.viewScaleAnimation}]}]}
           { ...this._panResponder.panHandlers }
-        /> : null}
+        /> : null }
         { this.state.showCross ?
         <Animated.View 
           style={[styles.crossView, {transform:[{scaleX:this.state.crossScaleAnimation},{scaleY:this.state.crossScaleAnimation}]}]}
