@@ -15,6 +15,9 @@ import {
   Easing
 } from 'react-native';
 
+const crossViewX = 162.5;
+const crossViewY = 607;
+
 import EIcon from 'react-native-vector-icons/Entypo'
 
 const ScreenHeight = Dimensions.get('window').height
@@ -33,7 +36,7 @@ export default class removeView extends Component {
   }
 
   asyncCall(e, gestureState){
-    if(gestureState.moveX < 162.5 || gestureState.moveY < 607) {
+    if(gestureState.moveX < crossViewX || gestureState.moveY < crossViewY) {
         Animated.parallel([
             Animated.spring(
                 this.state.crossScaleAnimation,
@@ -52,7 +55,7 @@ export default class removeView extends Component {
         ]).start()
     }
 
-    if(gestureState.moveX >= 162.5 && gestureState.moveY >= 607){
+    if(gestureState.moveX >= crossViewX && gestureState.moveY >= crossViewY){
       Animated.parallel([
         Animated.timing(
         this.state.crossScaleAnimation,
@@ -92,8 +95,8 @@ export default class removeView extends Component {
         },
 
         onPanResponderRelease: (e, gestureState) => {
-            if((gestureState.moveX > 162 && gestureState.moveX < 212) && ( gestureState.moveY > 607 && gestureState.moveY < 657)){
-                this.setState({showView:false})
+            if((gestureState.moveX > crossViewX && gestureState.moveX < crossViewX + 50) && ( gestureState.moveY > crossViewY && gestureState.moveY < crossViewY + 50)){
+                this.setState({showView:false}, () => alert('dummy chathead dismissed'))
             }
             this.setState({showCross:false,backOpacity:1}, () => {
             this.state.animation.flattenOffset()
